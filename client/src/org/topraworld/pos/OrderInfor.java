@@ -340,7 +340,7 @@ public class OrderInfor extends JDialog implements ActionListener{
 		}else if(e.getSource().equals(btnDelete)){
 			
 			if(tblDetails.getSelectedRow() == -1) return;
-			//new POSQuestion(posPanel.getFrame(), "Are you sure to void this order ?", posPanel);
+				new POSQuestion(posPanel.getFrame(), "Are you sure to void this order ?", posPanel);
 			
 			if(posPanel.answer){
 				

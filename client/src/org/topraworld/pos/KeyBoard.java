@@ -67,7 +67,7 @@ public class KeyBoard extends JDialog implements ActionListener{
 	@SuppressWarnings("deprecation")
 	public KeyBoard(POSPanel posPanel , String title){
 		
-		//super(posPanel.getFrame(), true);
+		super(posPanel.getFrame(), true);
 		this.posPanel = posPanel;
 		
 		this.intComponents();

@@ -2456,8 +2456,8 @@ public class MOrder extends X_C_Order implements DocAction
 		{
 			MProduct product = new MProduct(getCtx(), ol.getM_Product_ID(), get_TrxName());
 			if(product.getM_AttributeSet_ID() > 0)
-			{/*
-				if(product.isASIMandatory(isSOTrx(),getAD_Org_ID()))
+			{
+				/*if(product.isASIMandatory(isSOTrx(),getAD_Org_ID()))
 				{
 					MAttributeSet mas = MAttributeSet.get(getCtx(), product.getM_AttributeSet_ID());
 					if(!mas.excludeEntry(MColumn.getColumn_ID(MOrderLine.Table_Name, MOrderLine.COLUMNNAME_C_OrderLine_ID), isSOTrx())

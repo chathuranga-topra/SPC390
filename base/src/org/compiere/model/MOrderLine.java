@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.exceptions.ProductNotOnPriceListException;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
@@ -798,7 +799,6 @@ public class MOrderLine extends X_C_OrderLine
 			setOrder (getParent());
 		if (m_M_PriceList_ID == 0)
 			setHeaderInfo(getParent());
-
 		
 		//	R/O Check - Product/Warehouse Change
 		if (!newRecord 
@@ -901,6 +901,22 @@ public class MOrderLine extends X_C_OrderLine
 			String sql = "SELECT COALESCE(MAX(Line),0)+10 FROM C_OrderLine WHERE C_Order_ID=?";
 			int ii = DB.getSQLValue (get_TrxName(), sql, getC_Order_ID());
 			setLine (ii);
+		}
+		
+		if(getProduct().isStocked() && getC_Order().isSOTrx()
+			&& (getC_Order().getDocStatus().equalsIgnoreCase("DR"))
+			|| (getC_Order().getDocStatus().equalsIgnoreCase("IP"))
+		){
+			
+			BigDecimal available = MStorage.getQtyAvailable(getM_Warehouse_ID(), getM_Product_ID(), 0, null);
+			
+			if(getQtyOrdered().doubleValue() > available.doubleValue()){
+				throw new AdempiereException("Available quantity is less than the orderd quantity!");
+			}
+			
+			if(getQtyOrdered().doubleValue() == 0){
+				throw new AdempiereException("Zero quantities are not allowed!");
+			}
 		}
 		
 		//	Calculations & Rounding

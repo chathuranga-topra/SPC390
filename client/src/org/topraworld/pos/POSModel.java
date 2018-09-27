@@ -503,6 +503,8 @@ public class POSModel {
 	 
 	 protected boolean returnOrder(String docNo){
 		 
+		 System.out.println("Hello");
+		 
 		 boolean status = false;
 		 
 		 final String whereClause = "DOCUMENTNO = ? AND AD_Org_ID = ? AND ISSOTRX = 'Y' AND DOCSTATUS = 'CO' ";
