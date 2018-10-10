@@ -42,6 +42,8 @@ import org.compiere.model.X_AD_ReplicationDocument;
 import org.compiere.model.X_AD_ReplicationTable;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
+
+import java.util.List;
 import java.util.Properties;
 
 
@@ -130,33 +132,30 @@ public class ExportModelValidator implements ModelValidator
      */
 	public String modelChange (PO po, int type) throws Exception
 	{
+	
 		//String Mode = "Table";
 		log.info("po.get_TableName() = " + po.get_TableName());
 		//if (exportHelper != null) {
-		if (   type == TYPE_AFTER_CHANGE 
-			|| type == TYPE_AFTER_NEW
-			|| type == TYPE_BEFORE_DELETE) // After Change or After New
-			{
+		if (type == TYPE_AFTER_CHANGE || type == TYPE_AFTER_NEW || type == TYPE_BEFORE_DELETE) { // After Change or After New 
 			
-				MReplicationStrategy replicationStrategy = new MReplicationStrategy(po.getCtx(), 1000000, po.get_TableName());
-				MReplicationTable replicationTable = MReplicationStrategy.getReplicationTable(po.getCtx(), replicationStrategy.get_ID(), po.get_Table_ID());
-				if (replicationTable != null) {
-					exportHelper = new ExportHelper(client, replicationStrategy);
-					try {
-						exportHelper.exportRecord(
-								po,
-								MReplicationStrategy.REPLICATION_TABLE,
-								replicationTable.getReplicationType(),
-								type);
-					} catch (Exception exeption)
-					{
-						exeption.printStackTrace();
-					}
-				}
+			MReplicationStrategy replicationStrategy = new Query(po.getCtx(), 
+			MReplicationStrategy.Table_Name, null , po.get_TrxName())
+			.setClient_ID().setOnlyActiveRecords(true).first();
+			
+			System.out.println("replicationStrategy" + replicationStrategy);
 			
 				
-			}			
-		//}
+			//MReplicationStrategy replicationStrategy = new MReplicationStrategy(po.getCtx(), 1000000, po.get_TableName());
+			MReplicationTable replicationTable = MReplicationStrategy.getReplicationTable(po.getCtx(), replicationStrategy.get_ID(), po.get_Table_ID());
+			if (replicationTable != null) {
+				exportHelper = new ExportHelper(client, replicationStrategy);
+				try {
+					exportHelper.exportRecord(po,MReplicationStrategy.REPLICATION_TABLE,replicationTable.getReplicationType(),type);
+				} catch (Exception exeption){
+					exeption.printStackTrace();
+				}
+			}
+		}
 
 		return null;
 	}
