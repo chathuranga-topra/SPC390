@@ -34,6 +34,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -59,6 +60,7 @@ import org.compiere.util.CLogger;
 import org.compiere.util.DisplayType;
 import org.compiere.util.Msg;
 import org.compiere.util.Trx;
+import org.topraworld.model.MCWholeSaleReturn;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -136,12 +138,14 @@ public class ExportHelper {
 		if (po.get_KeyColumns().length < 1) {
 			throw new Exception(Msg.getMsg (po.getCtx(), "ExportNoneColumnKeyNotSupported")); 
 		}
-		//String version = "3.8.2";
-		String version = "";
-		//int EXP_Format_ID = 1000006;
-		MEXPFormat exportFormat = null;
-		exportFormat = MEXPFormat.getFormatByAD_Client_IDAD_Table_IDAndVersion(po.getCtx(), clientId, po.get_Table_ID(), version, po.get_TrxName());
-		log.fine("exportFormat = " + exportFormat);
+		String version = "3.8.2";
+		String where = "AD_Client_ID = ? AND AD_Table_ID = ?";
+		
+		MEXPFormat exportFormat = new Query(po.getCtx(), MEXPFormat.Table_Name, 
+			where.toString(), po.get_TrxName())
+			.setParameters(po.getAD_Client_ID() ,po.get_Table_ID())
+			.first();
+		
 		if (exportFormat == null || exportFormat.getEXP_Format_ID() == 0) {
 			// Fall back to System Client
 			MClient systemClient = MClient.get (po.getCtx(), 0);
