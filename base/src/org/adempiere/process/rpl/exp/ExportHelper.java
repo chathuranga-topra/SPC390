@@ -191,7 +191,6 @@ public class ExportHelper {
 			log.severe(e.toString());
 			throw e;
 		}
-
 		return outDocument.toString();
 	}
 
@@ -245,6 +244,9 @@ public class ExportHelper {
 			outDocument.appendChild(rootElement);
 			generateExportFormat(rootElement, exportFormat, po, po.get_ID(), variableMap);
 		}// finish record read
+		
+		
+		
 		return outDocument;
 	}
 

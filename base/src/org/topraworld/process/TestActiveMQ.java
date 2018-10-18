@@ -10,6 +10,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
@@ -17,14 +18,14 @@ public class TestActiveMQ implements MessageListener {
 	
 	public boolean isActivrMQOnline(){
 		
-		boolean status = false;
+		boolean status = true;;
 		
 		try {
-		    ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://dev-spc:61616");
+		    ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://spc-headoffice:61616");
 		    Connection conn = factory.createConnection("admin", "admin");
-		    Session session = conn.createSession(true, Session.AUTO_ACKNOWLEDGE);
+		    //Session session = conn.createSession(true, Session.AUTO_ACKNOWLEDGE);
 		    
-		    Destination destination = session.createTopic("BB");
+		   /* Destination destination = session.createTopic("BB");
 		    
 		    MessageProducer producer = session.createProducer(destination);
 		    MessageConsumer consumer = session.createConsumer(destination);
@@ -32,10 +33,12 @@ public class TestActiveMQ implements MessageListener {
 		    conn.start();
 		    TextMessage message = new ActiveMQTextMessage();
 		    message.setText("TestMessage njgj ggjk jkv");
-		    producer.send(message);
-		    status = true;
+		    producer.send(message);*/
+		    
 		} catch (JMSException e) {
 		    status = false;
+		    
+		    throw new AdempiereException("Login failed! Replication server goes down..");
 		}
 		
 		return status;

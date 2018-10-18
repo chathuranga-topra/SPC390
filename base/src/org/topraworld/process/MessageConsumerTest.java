@@ -22,20 +22,17 @@ public class MessageConsumerTest implements MessageListener {
 	private void consume(){
 		
 		try{
-			ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://dev-spc:61616");
+			ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://spc-headoffice:61616");
 		    Connection conn = factory.createConnection("admin", "admin");
+		    conn.setClientID("A1");
 		    Session session = conn.createSession(true, Session.AUTO_ACKNOWLEDGE);
 		    
 		    Destination destination = session.createTopic("ExampleTopic_Product");
 		    
 		    MessageConsumer consumer = session.createConsumer(destination);
-		    for(int i = 0; i< 1000 ; i++){
 		    	
-		    	consumer.setMessageListener(this); // class that implements MessageListener
-			    conn.start();
-		    }
-		    
-		    
+	    	consumer.setMessageListener(this); // class that implements MessageListener
+		    conn.start();
 		    
 		}catch(Exception ex){
 			ex.printStackTrace();

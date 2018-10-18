@@ -29,8 +29,12 @@
 
 package org.adempiere.model;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.process.rpl.exp.ExportHelper;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.compiere.apps.ADialog;
 import org.compiere.model.MClient;
+import org.compiere.model.MEXPProcessor;
 import org.compiere.model.MReplicationStrategy;
 import org.compiere.model.MReplicationTable;
 import org.compiere.model.MTable;
@@ -43,8 +47,13 @@ import org.compiere.model.X_AD_ReplicationTable;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 
+import com.sun.appserv.addons.AddonException;
+
 import java.util.List;
 import java.util.Properties;
+
+import javax.jms.Connection;
+import javax.jms.Session;
 
 
 /**
@@ -171,8 +180,6 @@ public class ExportModelValidator implements ModelValidator
 	 */
 	public String docValidate (PO po, int type) 
 	{
-		System.out.println("jkfnjkfnkf docValidate");
-		
 		log.info("Replicate the Document = " + po.get_TableName() + " with Type = " + type);
 		String result = null;
 		//if (exportHelper != null) {
@@ -243,11 +250,44 @@ public class ExportModelValidator implements ModelValidator
 		this.roleId = roleId;
 		this.userId = userId;
 		
-		log.info("AD_Org_ID  =" + this.orgId);
-		log.info("AD_Role_ID =" + this.roleId);
-		log.info("AD_User_ID =" + this.userId);
-		loadReplicationStrategy(Env.getCtx());
+		if(this.validateMQServer())
+			loadReplicationStrategy(Env.getCtx());
+		else
+			throw new AdempiereException("Login failed! Replication server goes down..");
+		
+		
 		return null;
+	}
+	
+	//this function validates the message mq server is listning
+	private boolean validateMQServer(){
+		
+		MReplicationStrategy strategies = new Query(Env.getCtx(), MReplicationStrategy.Table_Name, "AD_Client_ID = ?", null)
+		.setOnlyActiveRecords(true)
+		.setParameters(getAD_Client_ID())
+		.first();
+		
+		if(strategies == null) // no replication strategies
+			return true;
+		
+		MEXPProcessor expProcessor = (MEXPProcessor) strategies.getEXP_Processor();
+		
+		String host 	      = expProcessor.getHost();
+		int port 		      = expProcessor.getPort();
+		String account 	      = expProcessor.getAccount();
+		String password       = expProcessor.getPasswordInfo();
+		
+		boolean status = true;;
+		try {
+			ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp" + "://" + host + ":" + port);
+		    Connection conn = factory.createConnection(account, password);
+		    //Session session = conn.createSession(true, Session.AUTO_ACKNOWLEDGE);
+		} catch (Exception e) {
+			status = false;;
+			ADialog.error(0, null, "Login failed! Replication server goes down..");
+		}
+		
+		return status;
 	}
 
 	
@@ -272,6 +312,8 @@ public class ExportModelValidator implements ModelValidator
 				.setParameters(m_client.get_ID())
 				.first();
 		
+		if(strategies == null)
+			return;
 
 		for (X_AD_ReplicationTable rplTable : strategies.getReplicationTables()) {
 			if (X_AD_ReplicationTable.REPLICATIONTYPE_Merge.equals(rplTable.getReplicationType())
