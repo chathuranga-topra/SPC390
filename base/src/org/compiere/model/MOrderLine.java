@@ -903,19 +903,22 @@ public class MOrderLine extends X_C_OrderLine
 			setLine (ii);
 		}
 		
-		if(getProduct() != null && getProduct().isStocked() && getC_Order().isSOTrx()
-			&& (getC_Order().getDocStatus().equalsIgnoreCase("DR"))
-			|| (getC_Order().getDocStatus().equalsIgnoreCase("IP"))
-		){
-			
-			BigDecimal available = MStorage.getQtyAvailable(getM_Warehouse_ID(), getM_Product_ID(), 0, null);
-			
-			if(getQtyOrdered().doubleValue() > available.doubleValue()){
-				throw new AdempiereException("Available quantity is less than the orderd quantity!");
-			}
-			
-			if(getQtyOrdered().doubleValue() == 0){
-				throw new AdempiereException("Zero quantities are not allowed!");
+		if(!isReplication()){
+			if(getProduct() != null && getProduct().isStocked() && getC_Order().isSOTrx()
+				&& (getC_Order().getDocStatus().equalsIgnoreCase("DR"))
+				|| (getC_Order().getDocStatus().equalsIgnoreCase("IP"))
+			){
+					
+				BigDecimal available = MStorage.getQtyAvailable(getM_Warehouse_ID(), getM_Product_ID(), 0, null);
+				
+				if(getQtyOrdered().doubleValue() > available.doubleValue()){
+					
+					throw new AdempiereException("Available quantity is less than the orderd quantity!");
+				}
+					
+				if(getQtyOrdered().doubleValue() == 0){
+					throw new AdempiereException("Zero quantities are not allowed!");
+				}
 			}
 		}
 		

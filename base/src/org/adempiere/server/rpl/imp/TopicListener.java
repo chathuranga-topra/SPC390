@@ -256,10 +256,13 @@ public class TopicListener implements MessageListener {
 		
 		if ( message instanceof TextMessage ) {
 			
+			
 			try {
 				TextMessage txtMessage = (TextMessage) message;
 				
 				String text = txtMessage.getText();
+				
+				System.out.println(text);
 				
 
 				Document documentToBeImported = XMLHelper.createDocumentFromString( text );
