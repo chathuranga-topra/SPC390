@@ -266,6 +266,8 @@ public class ExportHelper {
 	 */
 	private void generateExportFormat(Element rootElement, MEXPFormat exportFormat, PO masterPO, int masterID, HashMap<String, Integer> variableMap) throws SQLException, Exception 
 	{
+		System.out.println(exportFormat);
+		
 		Collection<MEXPFormatLine> formatLines = exportFormat.getFormatLines();
 		@SuppressWarnings("unused")
 		boolean elementHasValue = false;

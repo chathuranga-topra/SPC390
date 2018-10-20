@@ -903,7 +903,7 @@ public class MOrderLine extends X_C_OrderLine
 			setLine (ii);
 		}
 		
-		if(getProduct().isStocked() && getC_Order().isSOTrx()
+		if(getProduct() != null && getProduct().isStocked() && getC_Order().isSOTrx()
 			&& (getC_Order().getDocStatus().equalsIgnoreCase("DR"))
 			|| (getC_Order().getDocStatus().equalsIgnoreCase("IP"))
 		){

@@ -87,13 +87,11 @@ public class MEXPFormat extends X_EXP_Format {
 			
 			for(MColumn c : columns.toArray(new MColumn[columns.size()])){
 				//continue for system fields
-				if(c.getColumnName().equalsIgnoreCase("AD_Client_ID")
-						|| c.getColumnName().equalsIgnoreCase("AD_Org_ID")
-						|| c.getColumnName().equalsIgnoreCase("Created")
-						|| c.getColumnName().equalsIgnoreCase("CreatedBy")
-						|| c.getColumnName().equalsIgnoreCase("Updated")
-						|| c.getColumnName().equalsIgnoreCase("UpdatedBy")
-						|| c.getColumnName().equalsIgnoreCase("UUID")){
+				if(c.getColumnName().equalsIgnoreCase("Created")
+					|| c.getColumnName().equalsIgnoreCase("CreatedBy")
+					|| c.getColumnName().equalsIgnoreCase("Updated")
+					|| c.getColumnName().equalsIgnoreCase("UpdatedBy")
+					|| c.getColumnName().equalsIgnoreCase("UUID")){
 					
 					continue;
 				}
