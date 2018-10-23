@@ -96,7 +96,7 @@ public class MEXPFormat extends X_EXP_Format {
 					continue;
 				}
 				
-				MEXPFormatLine expl = new MEXPFormatLine(getCtx(), 0, get_TrxName());
+				/*MEXPFormatLine expl = new MEXPFormatLine(getCtx(), 0, get_TrxName());
 				expl.setEXP_Format_ID(this.get_ID());
 				expl.setAD_Column_ID(c.get_ID());
 				expl.setType(MEXPFormatLine.TYPE_XMLElement);
@@ -107,7 +107,7 @@ public class MEXPFormat extends X_EXP_Format {
 					expl.setIsPartUniqueIndex(true);
 					expl.set_Value("IsCreateNonExisting", true);
 				} 
-				expl.save();
+				expl.save();*/
 			}
 		}
 		return success;

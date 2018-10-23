@@ -118,7 +118,7 @@ public class ImportHelper {
 		Element rootElement = documentToBeImported.getDocumentElement();
 
 		// Find which Export format to Load...
-		String AD_Client_Value = null;
+ 		String AD_Client_Value = null;
 		AD_Client_Value = rootElement.getAttribute("AD_Client_Value");
 		log.info("AD_Client_Value = " + AD_Client_Value);
 		if (AD_Client_Value == null || Util.isEmpty(AD_Client_Value)) 
@@ -316,6 +316,9 @@ public class ImportHelper {
 		//  and set value of column!
 		for (MEXPFormatLine formatLine : formatLines) 
 		{
+			
+			System.out.println(formatLine);
+			
 			log.info("=================== Beginnig of Format Line ===============================");
 			log.info("formatLine: [" + formatLine.toString() + "]");			
 			// Get the value
@@ -464,9 +467,6 @@ public class ImportHelper {
 	{
 		MColumn column = MColumn.get(ctx, line.getAD_Column_ID());
 		log.info("column=[" + column + "]");
-
-		
-		System.out.println(column);
 		
 		if (value !=null)
 		{
@@ -609,6 +609,8 @@ public class ImportHelper {
 			log.info("rootElement.ParentName = " + rootElement.getParentNode().getNodeName());	
 		}
 		
+		System.out.println(expFormat);
+		
 		// Get list with all Unique columns!
 		Collection<MEXPFormatLine> uniqueFormatLines = expFormat.getUniqueColumns();
 		if (uniqueFormatLines == null || uniqueFormatLines.size() < 1) {
@@ -733,11 +735,11 @@ public class ImportHelper {
 
 		Query query = new Query(ctx, MTable.get(ctx, expFormat.getAD_Table_ID()), whereClause.toString(), trxName)
 						.setParameters(params);
-		values = query.list();
+		values = query.list();;
 
 		if (values.size()>1) //The Return Object must be always one
 		{
-			throw new AdempiereException(Msg.getMsg(ctx, "EXPFormatLineNoUniqueColumns") + " : " +expFormat.getName() + "(" +formatLines+")");
+			//throw new AdempiereException(Msg.getMsg(ctx, "EXPFormatLineNoUniqueColumns") + " : " +expFormat.getName() + "(" +formatLines+")");
 		}
 
 		if (values.size()<=0) //Means that is a new record

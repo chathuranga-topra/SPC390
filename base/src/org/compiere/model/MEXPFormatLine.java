@@ -62,11 +62,11 @@ public class MEXPFormatLine extends X_EXP_FormatLine {
 	protected boolean beforeSave(boolean newRecord)
 	{
 		//set name and value as the database column
-		if(getType().equals(MEXPFormatLine.TYPE_XMLElement)){
+		/*if(getType().equals(MEXPFormatLine.TYPE_XMLElement)){
 			MColumn column = (MColumn) getAD_Column();
 			setName(column.getColumnName());
 			setValue(column.getColumnName());
-		}
+		}*/
 		
 		return true;
 	}	//	beforeSave
